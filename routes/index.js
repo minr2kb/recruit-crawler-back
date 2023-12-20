@@ -6,4 +6,8 @@ router.get('/', function(req, res, next) {
   res.render('index.html');
 });
 
+router.get('/health-check', function(req, res, next) {
+  res.send("ok")
+});
+
 module.exports = router;
