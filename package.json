@@ -9,7 +9,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "build:prod": "npm i -D typescript@5.3.3 && tsc",
+    "build:prod": "npm i -g typescript@5.3.3 && tsc",
     "dev": "nodemon --watch src/ src/index.ts",
     "start": "node ./dist/index.js"
   },
