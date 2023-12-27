@@ -20,7 +20,7 @@ const REMEMBER_BASE_URL = 'https://career.rememberapp.co.kr/job/postings/';
 
 const COUNT_PER_PAGE = 20;
 
-const getPostsFromRemember = async (
+const getPostsFromRemember = (controller: AbortController) =>  async (
   position: string,
   cateKey: string,
   subCateKey: string,
@@ -32,9 +32,11 @@ const getPostsFromRemember = async (
   let totalPages = 1;
   let page = 1;
 
-  while (page <= totalPages) {
+  while (page <= totalPages && !controller.signal.aborted) {
     console.log(`Remember - ${position} - page - ${page}`);
-    const response = await axios.post(getUrl(), getPostBody(cateKey, subCateKey, page));
+    const response = await axios.post(getUrl(), getPostBody(cateKey, subCateKey, page), {
+      signal: controller.signal,
+    });
     const { data } = response;
 
     posts = data.data;

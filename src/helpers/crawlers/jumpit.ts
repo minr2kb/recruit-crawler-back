@@ -14,15 +14,17 @@ const JUMPIT_BASE_URL = 'https://www.jumpit.co.kr/position/';
 
 const COUNT_PER_PAGE = 16;
 
-const getPostsFromJumpit = async (position: string, cateKey: string, month?: number) => {
+const getPostsFromJumpit = (controller: AbortController) =>  async (position: string, cateKey: string, month?: number) => {
   const result: ResultType[] = [];
 
   let posts = [...Array(COUNT_PER_PAGE)];
   let page = 1;
 
-  while (posts.length === COUNT_PER_PAGE) {
+  while (posts.length === COUNT_PER_PAGE && !controller.signal.aborted) {
     console.log(`Jumpit - ${position} - page - ${page}`);
-    const response = await axios.get(getUrl(cateKey, page));
+    const response = await axios.get(getUrl(cateKey, page), {
+      signal: controller.signal,
+    });
     const { data } = response;
 
     if (data.status !== 200) {
@@ -34,7 +36,9 @@ const getPostsFromJumpit = async (position: string, cateKey: string, month?: num
     page += 1;
 
     const promises = posts.map(async post => {
-      const response = await axios.get(getDetailUrl(post.id));
+      const response = await axios.get(getDetailUrl(post.id), {
+        signal: controller.signal,
+      });
       const data = response.data.result;
 
       if (month && !isInMonths(data.publishedAt, month)) return;

@@ -10,16 +10,18 @@ const getUrl = (cateKey: string, pageNum: number) =>
 
 const PROGRAMMERS_BASE_URL = 'https://career.programmers.co.kr/job_positions/';
 
-const getPostsFromProgrammers = async (position: string, cateKey: string, month?: number) => {
+const getPostsFromProgrammers = (controller: AbortController) => async (position: string, cateKey: string, month?: number) => {
   const result: ResultType[] = [];
 
   let totalPages = 1;
   let posts = [];
   let page = 1;
 
-  while (page <= totalPages) {
+  while (page <= totalPages && !controller.signal.aborted) {
     console.log(`Programmers - ${position} - page - ${page}`);
-    const response = await axios.get(getUrl(cateKey, page));
+    const response = await axios.get(getUrl(cateKey, page), {
+      signal: controller.signal,
+    });
     const { data } = response;
 
     posts = data.jobPositions;

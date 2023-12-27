@@ -14,14 +14,14 @@ const getDetailUrl = (id: number) => `https://www.wanted.co.kr/api/v4/jobs/${id}
 
 const WANTED_BASE_URL = 'https://www.wanted.co.kr/wd/';
 
-const getPostsFromWanted = async (position: string, cateKey: string) => {
+const getPostsFromWanted = (controller: AbortController) => async (position: string, cateKey: string) => {
   const result: ResultType[] = [];
 
   let posts = [...Array(COUNT_PER_PAGE)];
   let page = 0;
   let nextUrl = getUrl(position, page);
 
-  while (nextUrl && posts.length === COUNT_PER_PAGE) {
+  while (nextUrl && posts.length === COUNT_PER_PAGE && !controller.signal.aborted) {
     console.log(`Wanted - ${position} - page - ${page}`);
     const response = await axios.get(getUrl(cateKey, page));
     const { data } = response;
@@ -34,7 +34,9 @@ const getPostsFromWanted = async (position: string, cateKey: string) => {
     page += 1;
 
     const promises = posts.map(async post => {
-      const response = await axios.get(getDetailUrl(post.id));
+      const response = await axios.get(getDetailUrl(post.id), {
+        signal: controller.signal,
+      });
       const data = response.data.job;
 
       const targetData = {

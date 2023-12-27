@@ -15,23 +15,43 @@ export default {
    */
   jobplanet: async (ctx: Context) => {
     const { position, cateKey, month } = ctx.query;
+
+    const controller = new AbortController();
+
+    const onClose = () => {
+      console.log('Client connection closed');
+      controller.abort();
+    };
+    ctx.res.on('close', onClose);
+
     try {
-      const res = await getPostsFromJobplanet(
+      const res = await getPostsFromJobplanet(controller)(
         position as string,
         cateKey as string,
-        month ? Number(month) : undefined,
+        month ? Number(month) : undefined
       );
 
       sendResponse(ctx, HttpStatusCode.Ok, '', res);
     } catch (error) {
       console.log('ERROR');
       sendError(ctx, error);
+    } finally {
+      ctx.res.removeListener('close', onClose);
     }
   },
   jumpit: async (ctx: Context) => {
     const { position, cateKey, month } = ctx.query;
+
+    const controller = new AbortController();
+
+    const onClose = () => {
+      console.log('Client connection closed');
+      controller.abort();
+    };
+    ctx.res.on('close', onClose);
+
     try {
-      const res = await getPostsFromJumpit(
+      const res = await getPostsFromJumpit(controller)(
         position as string,
         cateKey as string,
         month ? Number(month) : undefined,
@@ -39,12 +59,23 @@ export default {
       sendResponse(ctx, HttpStatusCode.Ok, '', res);
     } catch (error) {
       sendError(ctx, error);
+    } finally {
+      ctx.res.removeListener('close', onClose);
     }
   },
   programmers: async (ctx: Context) => {
     const { position, cateKey, month } = ctx.query;
+
+    const controller = new AbortController();
+
+    const onClose = () => {
+      console.log('Client connection closed');
+      controller.abort();
+    };
+    ctx.res.on('close', onClose);
+
     try {
-      const res = await getPostsFromProgrammers(
+      const res = await getPostsFromProgrammers(controller)(
         position as string,
         cateKey as string,
         month ? Number(month) : undefined,
@@ -52,15 +83,24 @@ export default {
       sendResponse(ctx, HttpStatusCode.Ok, '', res);
     } catch (error) {
       sendError(ctx, error);
+    } finally {
+      ctx.res.removeListener('close', onClose);
     }
   },
   remember: async (ctx: Context) => {
     const { position, cateKey, month } = ctx.query;
-
     const [cate1, cate2] = (cateKey as string).split(DIVIDER_SIGN);
+
+    const controller = new AbortController();
+
+    const onClose = () => {
+      console.log('Client connection closed');
+      controller.abort();
+    };
+    ctx.res.on('close', onClose);
+
     try {
-      // TODO: cateKey 분리시키기
-      const res = await getPostsFromRemember(
+      const res = await getPostsFromRemember(controller)(
         position as string,
         cate1,
         cate2,
@@ -69,15 +109,28 @@ export default {
       sendResponse(ctx, HttpStatusCode.Ok, '', res);
     } catch (error) {
       sendError(ctx, error);
+    } finally {
+      ctx.res.removeListener('close', onClose);
     }
   },
   wanted: async (ctx: Context) => {
     const { position, cateKey } = ctx.query;
+
+    const controller = new AbortController();
+
+    const onClose = () => {
+      console.log('Client connection closed');
+      controller.abort();
+    };
+    ctx.res.on('close', onClose);
+
     try {
-      const res = await getPostsFromWanted(position as string, cateKey as string);
+      const res = await getPostsFromWanted(controller)(position as string, cateKey as string);
       sendResponse(ctx, HttpStatusCode.Ok, '', res);
     } catch (error) {
       sendError(ctx, error);
+    } finally {
+      ctx.res.removeListener('close', onClose);
     }
   },
 };
