@@ -25,8 +25,13 @@ export default {
   jobplanet: async (ctx: Context) => {
     try {
       const response = await axios.get<JobplanetCateResponseType>(JOBPLANET_CATE_URL, {
-        headers: { 'User-Agent': 'Mozilla/5.0' },
+        headers: { 
+          'User-Agent': 'Mozilla/5.0',
+          'Host':'jobplanet.co.kr',
+          'Accept':"*/*"
+        },
       });
+
 
       let res: CategoryFilterType[] = [];
       if (response.data.code === HttpStatusCode.Ok) {

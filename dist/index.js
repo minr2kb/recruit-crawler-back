@@ -40,7 +40,8 @@ app.on('error', (err, ctx) => {
     console.error('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
 });
 app.use((0, routes_1.default)()).use(router.routes());
-app.listen(port, () => {
+const server = app.listen(port, () => {
     console.log(`Koa server is listening on port ${port}`);
 });
+server.setTimeout(1000 * 60 * 10); // 10mins
 //# sourceMappingURL=index.js.map

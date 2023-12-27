@@ -18,7 +18,7 @@ export function sendError(ctx: Context, error: any) {
   if (isAxiosError(error)) {
     // Handle AxiosError
     console.error('AxiosError:', error);
-    sendResponse(ctx, error.response?.status, error.message, []);
+    sendResponse(ctx, error.response?.status, error.message, error.response?.data);
   } else {
     // Handle other types of errors
     console.error('Other Error:', error);

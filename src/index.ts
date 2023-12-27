@@ -13,6 +13,7 @@ const port: number = Number(process.env.PORT) || 3005;
 
 app.proxy = true;
 
+
 app.use(bodyParser());
 
 router.get('/', ctx => {
@@ -53,6 +54,8 @@ app.on('error', (err, ctx) => {
 
 app.use(routes()).use(router.routes());
 
-app.listen(port, () => {
+const server = app.listen(port, () => {
   console.log(`Koa server is listening on port ${port}`);
-});
+})
+
+server.setTimeout(1000 * 60 * 10); // 10mins

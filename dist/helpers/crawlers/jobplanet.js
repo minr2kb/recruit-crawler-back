@@ -26,7 +26,10 @@ const getPostsFromJobplanet = (position, cateKey, month) => __awaiter(void 0, vo
     let page = 1;
     while (posts.length === COUNT_PER_PAGE) {
         console.log(`Jobplanet - ${position} - page - ${page}`);
-        const response = yield axios_1.default.get(getUrl(cateKey, page));
+        const response = yield axios_1.default.get(getUrl(cateKey, page), { headers: {
+                'User-Agent': 'PostmanRuntime/7.36.0',
+                'Host': 'www.jobplanet.co.kr'
+            }, });
         const { data } = response;
         if (data.code !== 200) {
             console.error('ERROR');
@@ -36,7 +39,10 @@ const getPostsFromJobplanet = (position, cateKey, month) => __awaiter(void 0, vo
         page += 1;
         const promises = posts.map((post) => __awaiter(void 0, void 0, void 0, function* () {
             var _a, _b, _c;
-            const response = yield axios_1.default.get(getDetailUrl(post.id));
+            const response = yield axios_1.default.get(getDetailUrl(post.id), { headers: {
+                    'User-Agent': 'PostmanRuntime/7.36.0',
+                    'Host': 'www.jobplanet.co.kr'
+                }, });
             const { data } = response.data;
             if (month && !(0, validation_1.isInMonths)(post.updated_at, month))
                 return;

@@ -43,7 +43,11 @@ exports.default = {
     jobplanet: (ctx) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const response = yield axios_1.default.get(consts_1.JOBPLANET_CATE_URL, {
-                headers: { 'User-Agent': 'Mozilla/5.0' },
+                headers: {
+                    'User-Agent': 'Mozilla/5.0',
+                    'Host': 'jobplanet.co.kr',
+                    'Accept': "*/*"
+                },
             });
             let res = [];
             if (response.data.code === axios_1.HttpStatusCode.Ok) {
