@@ -27,15 +27,17 @@ const getPostBody = (cateKey, subCateKey, page) => ({
 });
 const REMEMBER_BASE_URL = 'https://career.rememberapp.co.kr/job/postings/';
 const COUNT_PER_PAGE = 20;
-const getPostsFromRemember = (position, cateKey, subCateKey, month) => __awaiter(void 0, void 0, void 0, function* () {
+const getPostsFromRemember = (controller) => (position, cateKey, subCateKey, month) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, _b;
     const result = [];
     let posts = [...Array(COUNT_PER_PAGE)];
     let totalPages = 1;
     let page = 1;
-    while (page <= totalPages) {
+    while (page <= totalPages && !controller.signal.aborted) {
         console.log(`Remember - ${position} - page - ${page}`);
-        const response = yield axios_1.default.post(getUrl(), getPostBody(cateKey, subCateKey, page));
+        const response = yield axios_1.default.post(getUrl(), getPostBody(cateKey, subCateKey, page), {
+            signal: controller.signal,
+        });
         const { data } = response;
         posts = data.data;
         totalPages = data.meta.total_pages;

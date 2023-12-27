@@ -20,13 +20,15 @@ const getUrl = (cateKey, pageNum) => `https://api.jumpit.co.kr/api/positions?pag
 const getDetailUrl = (id) => `https://api.jumpit.co.kr/api/position/${id}`;
 const JUMPIT_BASE_URL = 'https://www.jumpit.co.kr/position/';
 const COUNT_PER_PAGE = 16;
-const getPostsFromJumpit = (position, cateKey, month) => __awaiter(void 0, void 0, void 0, function* () {
+const getPostsFromJumpit = (controller) => (position, cateKey, month) => __awaiter(void 0, void 0, void 0, function* () {
     const result = [];
     let posts = [...Array(COUNT_PER_PAGE)];
     let page = 1;
-    while (posts.length === COUNT_PER_PAGE) {
+    while (posts.length === COUNT_PER_PAGE && !controller.signal.aborted) {
         console.log(`Jumpit - ${position} - page - ${page}`);
-        const response = yield axios_1.default.get(getUrl(cateKey, page));
+        const response = yield axios_1.default.get(getUrl(cateKey, page), {
+            signal: controller.signal,
+        });
         const { data } = response;
         if (data.status !== 200) {
             console.error('ERROR');
@@ -36,7 +38,9 @@ const getPostsFromJumpit = (position, cateKey, month) => __awaiter(void 0, void 
         page += 1;
         const promises = posts.map((post) => __awaiter(void 0, void 0, void 0, function* () {
             var _a, _b;
-            const response = yield axios_1.default.get(getDetailUrl(post.id));
+            const response = yield axios_1.default.get(getDetailUrl(post.id), {
+                signal: controller.signal,
+            });
             const data = response.data.result;
             if (month && !(0, validation_1.isInMonths)(data.publishedAt, month))
                 return;

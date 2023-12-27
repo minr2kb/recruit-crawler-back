@@ -18,13 +18,13 @@ const COUNT_PER_PAGE = 20;
 const getUrl = (cateKey, pageNum) => `https://www.wanted.co.kr/api/v4/jobs?country=kr&tag_type_ids=${cateKey}&locations=all&years=-1&limit=${COUNT_PER_PAGE}&offset=${COUNT_PER_PAGE * pageNum}&job_sort=job.latest_order`;
 const getDetailUrl = (id) => `https://www.wanted.co.kr/api/v4/jobs/${id}`;
 const WANTED_BASE_URL = 'https://www.wanted.co.kr/wd/';
-const getPostsFromWanted = (position, cateKey) => __awaiter(void 0, void 0, void 0, function* () {
+const getPostsFromWanted = (controller) => (position, cateKey) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, _b;
     const result = [];
     let posts = [...Array(COUNT_PER_PAGE)];
     let page = 0;
     let nextUrl = getUrl(position, page);
-    while (nextUrl && posts.length === COUNT_PER_PAGE) {
+    while (nextUrl && posts.length === COUNT_PER_PAGE && !controller.signal.aborted) {
         console.log(`Wanted - ${position} - page - ${page}`);
         const response = yield axios_1.default.get(getUrl(cateKey, page));
         const { data } = response;
@@ -36,7 +36,9 @@ const getPostsFromWanted = (position, cateKey) => __awaiter(void 0, void 0, void
         page += 1;
         const promises = posts.map((post) => __awaiter(void 0, void 0, void 0, function* () {
             var _c, _d, _e, _f, _g;
-            const response = yield axios_1.default.get(getDetailUrl(post.id));
+            const response = yield axios_1.default.get(getDetailUrl(post.id), {
+                signal: controller.signal,
+            });
             const data = response.data.job;
             const targetData = {
                 platform: '원티드',

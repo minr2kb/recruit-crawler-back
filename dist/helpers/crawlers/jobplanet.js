@@ -20,16 +20,19 @@ const getUrl = (cateKey, pageNum) => `https://www.jobplanet.co.kr/api/v3/job/pos
 const getDetailUrl = (id) => `https://www.jobplanet.co.kr/api/v1/job/postings/${id}`;
 const JOBPLANET_BASE_URL = 'https://www.jobplanet.co.kr/job/search?posting_ids%5B%5D=';
 const COUNT_PER_PAGE = 20;
-const getPostsFromJobplanet = (position, cateKey, month) => __awaiter(void 0, void 0, void 0, function* () {
+const getPostsFromJobplanet = (controller) => (position, cateKey, month) => __awaiter(void 0, void 0, void 0, function* () {
     const result = [];
     let posts = [...Array(COUNT_PER_PAGE)];
     let page = 1;
-    while (posts.length === COUNT_PER_PAGE) {
+    while (posts.length === COUNT_PER_PAGE && !controller.signal.aborted) {
         console.log(`Jobplanet - ${position} - page - ${page}`);
-        const response = yield axios_1.default.get(getUrl(cateKey, page), { headers: {
+        const response = yield axios_1.default.get(getUrl(cateKey, page), {
+            headers: {
                 'User-Agent': 'PostmanRuntime/7.36.0',
                 'Host': 'www.jobplanet.co.kr'
-            }, });
+            },
+            signal: controller.signal,
+        });
         const { data } = response;
         if (data.code !== 200) {
             console.error('ERROR');
@@ -39,10 +42,13 @@ const getPostsFromJobplanet = (position, cateKey, month) => __awaiter(void 0, vo
         page += 1;
         const promises = posts.map((post) => __awaiter(void 0, void 0, void 0, function* () {
             var _a, _b, _c;
-            const response = yield axios_1.default.get(getDetailUrl(post.id), { headers: {
+            const response = yield axios_1.default.get(getDetailUrl(post.id), {
+                headers: {
                     'User-Agent': 'PostmanRuntime/7.36.0',
                     'Host': 'www.jobplanet.co.kr'
-                }, });
+                },
+                signal: controller.signal,
+            });
             const { data } = response.data;
             if (month && !(0, validation_1.isInMonths)(post.updated_at, month))
                 return;

@@ -18,15 +18,17 @@ const format_1 = require("../format");
 const validation_1 = require("../validation");
 const getUrl = (cateKey, pageNum) => `https://career.programmers.co.kr/api/job_positions?order=recent&page=${pageNum}&job_category_ids[]=${cateKey}`;
 const PROGRAMMERS_BASE_URL = 'https://career.programmers.co.kr/job_positions/';
-const getPostsFromProgrammers = (position, cateKey, month) => __awaiter(void 0, void 0, void 0, function* () {
+const getPostsFromProgrammers = (controller) => (position, cateKey, month) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, _b, _c, _d;
     const result = [];
     let totalPages = 1;
     let posts = [];
     let page = 1;
-    while (page <= totalPages) {
+    while (page <= totalPages && !controller.signal.aborted) {
         console.log(`Programmers - ${position} - page - ${page}`);
-        const response = yield axios_1.default.get(getUrl(cateKey, page));
+        const response = yield axios_1.default.get(getUrl(cateKey, page), {
+            signal: controller.signal,
+        });
         const { data } = response;
         posts = data.jobPositions;
         totalPages = data.totalPages;

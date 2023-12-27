@@ -27,55 +27,99 @@ exports.default = {
      */
     jobplanet: (ctx) => __awaiter(void 0, void 0, void 0, function* () {
         const { position, cateKey, month } = ctx.query;
+        const controller = new AbortController();
+        const onClose = () => {
+            console.log('Client connection closed');
+            controller.abort();
+        };
+        ctx.res.on('close', onClose);
         try {
-            const res = yield (0, jobplanet_1.default)(position, cateKey, month ? Number(month) : undefined);
+            const res = yield (0, jobplanet_1.default)(controller)(position, cateKey, month ? Number(month) : undefined);
             (0, response_1.sendResponse)(ctx, axios_1.HttpStatusCode.Ok, '', res);
         }
         catch (error) {
             console.log('ERROR');
             (0, response_1.sendError)(ctx, error);
         }
+        finally {
+            ctx.res.removeListener('close', onClose);
+        }
     }),
     jumpit: (ctx) => __awaiter(void 0, void 0, void 0, function* () {
         const { position, cateKey, month } = ctx.query;
+        const controller = new AbortController();
+        const onClose = () => {
+            console.log('Client connection closed');
+            controller.abort();
+        };
+        ctx.res.on('close', onClose);
         try {
-            const res = yield (0, jumpit_1.default)(position, cateKey, month ? Number(month) : undefined);
+            const res = yield (0, jumpit_1.default)(controller)(position, cateKey, month ? Number(month) : undefined);
             (0, response_1.sendResponse)(ctx, axios_1.HttpStatusCode.Ok, '', res);
         }
         catch (error) {
             (0, response_1.sendError)(ctx, error);
+        }
+        finally {
+            ctx.res.removeListener('close', onClose);
         }
     }),
     programmers: (ctx) => __awaiter(void 0, void 0, void 0, function* () {
         const { position, cateKey, month } = ctx.query;
+        const controller = new AbortController();
+        const onClose = () => {
+            console.log('Client connection closed');
+            controller.abort();
+        };
+        ctx.res.on('close', onClose);
         try {
-            const res = yield (0, programmers_1.default)(position, cateKey, month ? Number(month) : undefined);
+            const res = yield (0, programmers_1.default)(controller)(position, cateKey, month ? Number(month) : undefined);
             (0, response_1.sendResponse)(ctx, axios_1.HttpStatusCode.Ok, '', res);
         }
         catch (error) {
             (0, response_1.sendError)(ctx, error);
+        }
+        finally {
+            ctx.res.removeListener('close', onClose);
         }
     }),
     remember: (ctx) => __awaiter(void 0, void 0, void 0, function* () {
         const { position, cateKey, month } = ctx.query;
         const [cate1, cate2] = cateKey.split(consts_1.DIVIDER_SIGN);
+        const controller = new AbortController();
+        const onClose = () => {
+            console.log('Client connection closed');
+            controller.abort();
+        };
+        ctx.res.on('close', onClose);
         try {
-            // TODO: cateKey 분리시키기
-            const res = yield (0, remember_1.default)(position, cate1, cate2, month ? Number(month) : undefined);
+            const res = yield (0, remember_1.default)(controller)(position, cate1, cate2, month ? Number(month) : undefined);
             (0, response_1.sendResponse)(ctx, axios_1.HttpStatusCode.Ok, '', res);
         }
         catch (error) {
             (0, response_1.sendError)(ctx, error);
+        }
+        finally {
+            ctx.res.removeListener('close', onClose);
         }
     }),
     wanted: (ctx) => __awaiter(void 0, void 0, void 0, function* () {
         const { position, cateKey } = ctx.query;
+        const controller = new AbortController();
+        const onClose = () => {
+            console.log('Client connection closed');
+            controller.abort();
+        };
+        ctx.res.on('close', onClose);
         try {
-            const res = yield (0, wanted_1.default)(position, cateKey);
+            const res = yield (0, wanted_1.default)(controller)(position, cateKey);
             (0, response_1.sendResponse)(ctx, axios_1.HttpStatusCode.Ok, '', res);
         }
         catch (error) {
             (0, response_1.sendError)(ctx, error);
+        }
+        finally {
+            ctx.res.removeListener('close', onClose);
         }
     }),
 };
