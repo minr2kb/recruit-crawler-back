@@ -17,7 +17,9 @@ export function sendResponse(
 export function sendError(ctx: Context, error: any) {
   if (isAxiosError(error)) {
     // Handle AxiosError
-    console.error('AxiosError:', error);
+    if (error.code === 'ERR_CANCELED') console.log("Connection Canceled")
+    else console.error('AxiosError:', error);
+    
     sendResponse(ctx, error.response?.status, error.message, error.response?.data);
   } else {
     // Handle other types of errors

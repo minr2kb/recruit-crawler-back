@@ -14,7 +14,11 @@ function sendError(ctx, error) {
     var _a, _b;
     if ((0, axios_1.isAxiosError)(error)) {
         // Handle AxiosError
-        console.error('AxiosError:', error);
+        // if the error is caused by canceling the request, it will be handled by the finally block
+        if (error.code === 'ERR_CANCELED')
+            console.log("Connection Canceled");
+        else
+            console.error('AxiosError:', error);
         sendResponse(ctx, (_a = error.response) === null || _a === void 0 ? void 0 : _a.status, error.message, (_b = error.response) === null || _b === void 0 ? void 0 : _b.data);
     }
     else {
