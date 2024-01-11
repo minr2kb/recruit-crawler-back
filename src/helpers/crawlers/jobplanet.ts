@@ -5,8 +5,8 @@ import { type ResultType } from '../../types/commonTypes';
 import { toStringByFormatting } from '../format';
 import { isInMonths } from '../validation';
 
-const getUrl = (cateKey: string, pageNum: number) =>
-  `https://www.jobplanet.co.kr/api/v3/job/postings?order_by=recent&occupation_level2=${cateKey}&page=${pageNum}&page_size=20`;
+const getUrl = (cateKey: string, page: number) =>
+  `https://www.jobplanet.co.kr/api/v3/job/postings?order_by=recent&occupation_level2=${cateKey}&page=${page}&page_size=20`;
 
 const getDetailUrl = (id: number) => `https://www.jobplanet.co.kr/api/v1/job/postings/${id}`;
 
@@ -14,7 +14,7 @@ const JOBPLANET_BASE_URL = 'https://www.jobplanet.co.kr/job/search?posting_ids%5
 
 const COUNT_PER_PAGE = 20;
 
-const getPostsFromJobplanet = (controller:AbortController) => async (position: string, cateKey: string, month?: number) => {
+const getPostsFromJobplanet = (controller: AbortController) => async (position: string, cateKey: string, month?: number) => {
   const result: ResultType[] = [];
 
   let posts = [...Array(COUNT_PER_PAGE)];
@@ -73,5 +73,7 @@ const getPostsFromJobplanet = (controller:AbortController) => async (position: s
     (a, b) => new Date(b.updatedDate).valueOf() - new Date(a.updatedDate).valueOf(),
   );
 };
+
+
 
 export default getPostsFromJobplanet;

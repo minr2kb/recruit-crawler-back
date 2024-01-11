@@ -13,6 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.getPostsFromRemember = exports.getPostsFromRememberByPage = void 0;
 const axios_1 = __importDefault(require("axios"));
 const format_1 = require("../format");
 const validation_1 = require("../validation");
@@ -26,40 +27,50 @@ const getPostBody = (cateKey, subCateKey, page) => ({
     },
 });
 const REMEMBER_BASE_URL = 'https://career.rememberapp.co.kr/job/postings/';
-const COUNT_PER_PAGE = 20;
-const getPostsFromRemember = (controller) => (position, cateKey, subCateKey, month) => __awaiter(void 0, void 0, void 0, function* () {
+const getPostsFromRememberByPage = (controller) => (position, cateKey, subCateKey, page, month) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, _b;
-    const result = [];
-    let posts = [...Array(COUNT_PER_PAGE)];
-    let totalPages = 1;
-    let page = 1;
-    while (page <= totalPages && !controller.signal.aborted) {
-        console.log(`Remember - ${position} - page - ${page}`);
-        const response = yield axios_1.default.post(getUrl(), getPostBody(cateKey, subCateKey, page), {
-            signal: controller.signal,
-        });
-        const { data } = response;
-        posts = data.data;
-        totalPages = data.meta.total_pages;
-        page += 1;
-        for (const post of posts) {
-            if (month && !(0, validation_1.isInMonths)(post.starts_at, month))
-                break;
-            const targetData = {
-                platform: '리멤버',
-                companyName: (_b = (_a = post.organization) === null || _a === void 0 ? void 0 : _a.name) !== null && _b !== void 0 ? _b : '',
-                title: post.title,
-                position,
-                updatedDate: (0, format_1.toStringByFormatting)(new Date(post.starts_at)),
-                recruitUrl: REMEMBER_BASE_URL + post.id,
-                companyLocation: post.addresses[0]
-                    ? `${post.addresses[0].address_level1} ${post.addresses[0].address_level2}`
-                    : '',
-            };
-            result.push(targetData);
+    console.log(`Remember - ${position} - page - ${page}`);
+    const response = yield axios_1.default.post(getUrl(), getPostBody(cateKey, subCateKey, page), {
+        signal: controller.signal,
+    });
+    const { data } = response;
+    let result = [];
+    let next = page < data.meta.total_pages;
+    for (const post of data.data) {
+        if (month && !(0, validation_1.isInMonths)(post.starts_at, month)) {
+            next = false;
+            break;
         }
+        const targetData = {
+            platform: '리멤버',
+            companyName: (_b = (_a = post.organization) === null || _a === void 0 ? void 0 : _a.name) !== null && _b !== void 0 ? _b : '',
+            title: post.title,
+            position,
+            updatedDate: (0, format_1.toStringByFormatting)(new Date(post.starts_at)),
+            recruitUrl: REMEMBER_BASE_URL + post.id,
+            companyLocation: post.addresses[0]
+                ? `${post.addresses[0].address_level1} ${post.addresses[0].address_level2}`
+                : '',
+        };
+        result.push(targetData);
+    }
+    return {
+        result,
+        next
+    };
+});
+exports.getPostsFromRememberByPage = getPostsFromRememberByPage;
+const getPostsFromRemember = (controller) => (position, cateKey, subCateKey, month) => __awaiter(void 0, void 0, void 0, function* () {
+    let result = [];
+    let page = 1;
+    let hasNextPage = true;
+    while (hasNextPage && !controller.signal.aborted) {
+        const pageResult = yield (0, exports.getPostsFromRememberByPage)(controller)(position, cateKey, subCateKey, page, month);
+        result = result.concat(pageResult.result);
+        hasNextPage = pageResult.next;
+        page += 1;
     }
     return result.sort((a, b) => new Date(b.updatedDate).valueOf() - new Date(a.updatedDate).valueOf());
 });
-exports.default = getPostsFromRemember;
+exports.getPostsFromRemember = getPostsFromRemember;
 //# sourceMappingURL=remember.js.map

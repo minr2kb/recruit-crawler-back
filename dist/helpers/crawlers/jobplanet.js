@@ -16,7 +16,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const axios_1 = __importDefault(require("axios"));
 const format_1 = require("../format");
 const validation_1 = require("../validation");
-const getUrl = (cateKey, pageNum) => `https://www.jobplanet.co.kr/api/v3/job/postings?order_by=recent&occupation_level2=${cateKey}&page=${pageNum}&page_size=20`;
+const getUrl = (cateKey, page) => `https://www.jobplanet.co.kr/api/v3/job/postings?order_by=recent&occupation_level2=${cateKey}&page=${page}&page_size=20`;
 const getDetailUrl = (id) => `https://www.jobplanet.co.kr/api/v1/job/postings/${id}`;
 const JOBPLANET_BASE_URL = 'https://www.jobplanet.co.kr/job/search?posting_ids%5B%5D=';
 const COUNT_PER_PAGE = 20;

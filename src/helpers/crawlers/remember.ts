@@ -18,51 +18,71 @@ const getPostBody = (cateKey: string, subCateKey: string, page: number) => ({
 
 const REMEMBER_BASE_URL = 'https://career.rememberapp.co.kr/job/postings/';
 
-const COUNT_PER_PAGE = 20;
+export const getPostsFromRememberByPage = (controller: AbortController) => async (
+  position: string,
+  cateKey: string,
+  subCateKey: string,
+  page: number,
+  month?: number,
+) => {
+  console.log(`Remember - ${position} - page - ${page}`);
+  const response = await axios.post(getUrl(), getPostBody(cateKey, subCateKey, page), {
+    signal: controller.signal,
+  });
+  const { data } = response;
 
-const getPostsFromRemember = (controller: AbortController) =>  async (
+  let result: ResultType[] = [];
+  let next = page < data.meta.total_pages;
+
+  for (const post of data.data) {
+    if (month && !isInMonths(post.starts_at, month)){ 
+      next = false
+      break;
+    }
+    const targetData = {
+      platform: '리멤버',
+      companyName: post.organization?.name ?? '',
+      title: post.title,
+      position,
+      updatedDate: toStringByFormatting(new Date(post.starts_at)),
+      recruitUrl: REMEMBER_BASE_URL + post.id,
+      companyLocation: post.addresses[0]
+        ? `${post.addresses[0].address_level1} ${post.addresses[0].address_level2}`
+        : '',
+    };
+
+    result.push(targetData);
+  }
+
+  return {
+    result,
+    next
+  };
+};
+
+export const getPostsFromRemember = (controller: AbortController) => async (
   position: string,
   cateKey: string,
   subCateKey: string,
   month?: number,
 ) => {
-  const result: ResultType[] = [];
-
-  let posts = [...Array(COUNT_PER_PAGE)];
-  let totalPages = 1;
+  let result: ResultType[] = [];
   let page = 1;
+  let hasNextPage = true;
 
-  while (page <= totalPages && !controller.signal.aborted) {
-    console.log(`Remember - ${position} - page - ${page}`);
-    const response = await axios.post(getUrl(), getPostBody(cateKey, subCateKey, page), {
-      signal: controller.signal,
-    });
-    const { data } = response;
+  while (hasNextPage && !controller.signal.aborted) {
+    const pageResult = await getPostsFromRememberByPage(controller)(position, cateKey, subCateKey, page, month);
 
-    posts = data.data;
-    totalPages = data.meta.total_pages;
+    result = result.concat(pageResult.result);
+    hasNextPage = pageResult.next;
     page += 1;
-
-    for (const post of posts) {
-      if (month && !isInMonths(post.starts_at, month)) break;
-      const targetData = {
-        platform: '리멤버',
-        companyName: post.organization?.name ?? '',
-        title: post.title,
-        position,
-        updatedDate: toStringByFormatting(new Date(post.starts_at)),
-        recruitUrl: REMEMBER_BASE_URL + post.id,
-        companyLocation: post.addresses[0]
-          ? `${post.addresses[0].address_level1} ${post.addresses[0].address_level2}`
-          : '',
-      };
-
-      result.push(targetData);
-    }
   }
+
   return result.sort(
     (a, b) => new Date(b.updatedDate).valueOf() - new Date(a.updatedDate).valueOf(),
   );
 };
 
-export default getPostsFromRemember;
+
+
+

@@ -11,8 +11,9 @@ const app = new Koa();
 const router = new Router();
 const port: number = Number(process.env.PORT) || 3005;
 
-app.proxy = true;
+require('events').EventEmitter.defaultMaxListeners = 100;
 
+app.proxy = true;
 
 app.use(bodyParser());
 

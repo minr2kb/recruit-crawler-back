@@ -13,6 +13,7 @@ const routes_1 = __importDefault(require("./api/routes"));
 const app = new koa_1.default();
 const router = new koa_router_1.default();
 const port = Number(process.env.PORT) || 3005;
+require('events').EventEmitter.defaultMaxListeners = 100;
 app.proxy = true;
 app.use((0, koa_bodyparser_1.default)());
 router.get('/', ctx => {

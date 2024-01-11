@@ -16,10 +16,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const axios_1 = require("axios");
 const consts_1 = require("../../helpers/consts");
 const jobplanet_1 = __importDefault(require("../../helpers/crawlers/jobplanet"));
-const jumpit_1 = __importDefault(require("../../helpers/crawlers/jumpit"));
-const programmers_1 = __importDefault(require("../../helpers/crawlers/programmers"));
-const remember_1 = __importDefault(require("../../helpers/crawlers/remember"));
-const wanted_1 = __importDefault(require("../../helpers/crawlers/wanted"));
+const jumpit_1 = require("../../helpers/crawlers/jumpit");
+const programmers_1 = require("../../helpers/crawlers/programmers");
+const remember_1 = require("../../helpers/crawlers/remember");
+const wanted_1 = require("../../helpers/crawlers/wanted");
 const response_1 = require("../../helpers/response");
 exports.default = {
     /**
@@ -46,7 +46,7 @@ exports.default = {
         }
     }),
     jumpit: (ctx) => __awaiter(void 0, void 0, void 0, function* () {
-        const { position, cateKey, month } = ctx.query;
+        const { position, cateKey, page, month } = ctx.query;
         const controller = new AbortController();
         const onClose = () => {
             console.log('Client connection closed');
@@ -54,7 +54,8 @@ exports.default = {
         };
         ctx.res.on('close', onClose);
         try {
-            const res = yield (0, jumpit_1.default)(controller)(position, cateKey, month ? Number(month) : undefined);
+            const res = page ?
+                yield (0, jumpit_1.getPostsFromJumpitByPage)(controller)(position, cateKey, page ? Number(page) : undefined, month ? Number(month) : undefined) : yield (0, jumpit_1.getPostsFromJumpit)(controller)(position, cateKey, month ? Number(month) : undefined);
             (0, response_1.sendResponse)(ctx, axios_1.HttpStatusCode.Ok, '', res);
         }
         catch (error) {
@@ -65,7 +66,7 @@ exports.default = {
         }
     }),
     programmers: (ctx) => __awaiter(void 0, void 0, void 0, function* () {
-        const { position, cateKey, month } = ctx.query;
+        const { position, cateKey, page, month } = ctx.query;
         const controller = new AbortController();
         const onClose = () => {
             console.log('Client connection closed');
@@ -73,7 +74,8 @@ exports.default = {
         };
         ctx.res.on('close', onClose);
         try {
-            const res = yield (0, programmers_1.default)(controller)(position, cateKey, month ? Number(month) : undefined);
+            const res = page ?
+                yield (0, programmers_1.getPostsFromProgrammersByPage)(controller)(position, cateKey, page ? Number(page) : undefined, month ? Number(month) : undefined) : yield (0, programmers_1.getPostsFromProgrammers)(controller)(position, cateKey, month ? Number(month) : undefined);
             (0, response_1.sendResponse)(ctx, axios_1.HttpStatusCode.Ok, '', res);
         }
         catch (error) {
@@ -84,7 +86,7 @@ exports.default = {
         }
     }),
     remember: (ctx) => __awaiter(void 0, void 0, void 0, function* () {
-        const { position, cateKey, month } = ctx.query;
+        const { position, cateKey, page, month } = ctx.query;
         const [cate1, cate2] = cateKey.split(consts_1.DIVIDER_SIGN);
         const controller = new AbortController();
         const onClose = () => {
@@ -93,7 +95,8 @@ exports.default = {
         };
         ctx.res.on('close', onClose);
         try {
-            const res = yield (0, remember_1.default)(controller)(position, cate1, cate2, month ? Number(month) : undefined);
+            const res = page ?
+                yield (0, remember_1.getPostsFromRememberByPage)(controller)(position, cate1, cate2, page ? Number(page) : undefined, month ? Number(month) : undefined) : yield (0, remember_1.getPostsFromRemember)(controller)(position, cate1, cate2, month ? Number(month) : undefined);
             (0, response_1.sendResponse)(ctx, axios_1.HttpStatusCode.Ok, '', res);
         }
         catch (error) {
@@ -104,7 +107,7 @@ exports.default = {
         }
     }),
     wanted: (ctx) => __awaiter(void 0, void 0, void 0, function* () {
-        const { position, cateKey } = ctx.query;
+        const { position, cateKey, page } = ctx.query;
         const controller = new AbortController();
         const onClose = () => {
             console.log('Client connection closed');
@@ -112,7 +115,8 @@ exports.default = {
         };
         ctx.res.on('close', onClose);
         try {
-            const res = yield (0, wanted_1.default)(controller)(position, cateKey);
+            const res = page ?
+                yield (0, wanted_1.getPostsFromWantedByPage)(controller)(position, cateKey, page ? Number(page) : undefined) : yield (0, wanted_1.getPostsFromWanted)(controller)(position, cateKey);
             (0, response_1.sendResponse)(ctx, axios_1.HttpStatusCode.Ok, '', res);
         }
         catch (error) {
