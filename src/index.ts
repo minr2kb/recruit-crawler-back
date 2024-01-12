@@ -66,10 +66,12 @@ app.use(async (ctx: Context, next) => {
   };
 
   const { method, url, status } = ctx;
+
+  if(url === '/health-check') return;
+  
   const logLevel = status >= 500 ? 'error' : status >= 400 ? 'warn' : 'info';
 
   console[logLevel](`\n${new Date(start).toTimeString()} ${logColors[logLevel]}[${method}] ${url} ${status}${logColors.reset} - ${ms}ms - ${ctx.get('user-agent')}`);
-  
 })
 
 app.use(routes()).use(router.routes());
