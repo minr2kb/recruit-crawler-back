@@ -58,11 +58,17 @@ app.use(async (ctx: Context, next) => {
   const start = Date.now();
   await next();
   const ms = Date.now() - start;
+  const logColors = {
+    'info': '\x1b[32m',
+    'warn': '\x1b[33m',
+    'error': '\x1b[31m',
+    'reset': '\x1b[0m',
+  };
 
   const { method, url, status } = ctx;
   const logLevel = status >= 500 ? 'error' : status >= 400 ? 'warn' : 'info';
 
-  console[logLevel](`\n${new Date(start).toTimeString()} ${'\x1b[32m'}[${method}] ${url} ${status}${'\x1b[0m'} - ${ms}ms - ${ctx.get('user-agent')}`);
+  console[logLevel](`\n${new Date(start).toTimeString()} ${logColors[logLevel]}[${method}] ${url} ${status}${logColors.reset} - ${ms}ms - ${ctx.get('user-agent')}`);
   
 })
 
