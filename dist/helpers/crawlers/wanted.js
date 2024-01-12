@@ -21,7 +21,7 @@ const getDetailUrl = (id) => `https://www.wanted.co.kr/api/v4/jobs/${id}`;
 const WANTED_BASE_URL = 'https://www.wanted.co.kr/wd/';
 const getPostsFromWantedByPage = (controller) => (position, cateKey, page) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
-    console.log(`Wanted - ${position} - page - ${page}`);
+    // console.log(`Wanted - ${position} - page - ${page}`);
     const response = yield axios_1.default.get(getUrl(cateKey, page), {
         signal: controller.signal,
     });
@@ -63,10 +63,6 @@ const getPostsFromWanted = (controller) => (position, cateKey) => __awaiter(void
         }
         hasMorePages = pageResult.next;
         page += 1;
-        if (!hasMorePages) {
-            console.log(`Wanted - ${position} - DONE✅`);
-            break;
-        }
     }
     return result.sort((a, b) => new Date(b.updatedDate).valueOf() - new Date(a.updatedDate).valueOf());
 });

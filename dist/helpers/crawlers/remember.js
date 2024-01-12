@@ -29,7 +29,7 @@ const getPostBody = (cateKey, subCateKey, page) => ({
 const REMEMBER_BASE_URL = 'https://career.rememberapp.co.kr/job/postings/';
 const getPostsFromRememberByPage = (controller) => (position, cateKey, subCateKey, page, month) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, _b;
-    console.log(`Remember - ${position} - page - ${page}`);
+    // console.log(`Remember - ${position} - page - ${page}`);
     const response = yield axios_1.default.post(getUrl(), getPostBody(cateKey, subCateKey, page), {
         signal: controller.signal,
     });

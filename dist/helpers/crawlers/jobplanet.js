@@ -25,7 +25,7 @@ const getPostsFromJobplanet = (controller) => (position, cateKey, month) => __aw
     let posts = [...Array(COUNT_PER_PAGE)];
     let page = 1;
     while (posts.length === COUNT_PER_PAGE && !controller.signal.aborted) {
-        console.log(`Jobplanet - ${position} - page - ${page}`);
+        // console.log(`Jobplanet - ${position} - page - ${page}`);
         const response = yield axios_1.default.get(getUrl(cateKey, page), {
             headers: {
                 'User-Agent': 'PostmanRuntime/7.36.0',

@@ -21,7 +21,7 @@ const getUrl = (cateKey, page) => `https://career.programmers.co.kr/api/job_posi
 const PROGRAMMERS_BASE_URL = 'https://career.programmers.co.kr/job_positions/';
 const getPostsFromProgrammersByPage = (controller) => (position, cateKey, page, month) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, _b, _c, _d;
-    console.log(`Programmers - ${position} - page - ${page}`);
+    // console.log(`Programmers - ${position} - page - ${page}`);
     const response = yield axios_1.default.get(getUrl(cateKey, page), {
         signal: controller.signal,
     });

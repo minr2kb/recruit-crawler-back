@@ -22,7 +22,7 @@ const getDetailUrl = (id) => `https://api.jumpit.co.kr/api/position/${id}`;
 const JUMPIT_BASE_URL = 'https://www.jumpit.co.kr/position/';
 const COUNT_PER_PAGE = 16;
 const getPostsFromJumpitByPage = (controller) => (position, cateKey, page, month) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log(`Jumpit - ${position} - page - ${page}`);
+    // console.log(`Jumpit - ${position} - page - ${page}`);
     const response = yield axios_1.default.get(getUrl(cateKey, page), {
         signal: controller.signal,
     });
