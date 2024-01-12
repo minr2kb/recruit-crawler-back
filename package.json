@@ -1,6 +1,6 @@
 {
   "name": "recruit-crawler-back",
-  "version": "1.1.5",
+  "version": "1.1.6",
   "description": "backend for recruit-crawler-v2",
   "main": "src/index.ts",
   "engines": {
@@ -11,7 +11,7 @@
     "build": "tsc",
     "dev": "nodemon --watch src/ src/index.ts",
     "start": "node ./dist/index.js",
-    "commit-version": "git commit -am \"UPDATE v$(node -p \"require('./package.json').version\")\"",
+    "commit-version": "git commit -am \"UPDATE v$(node -p \"require('./package.json').version\")\" --allow-empty",
     "deploy": "npm run build && yarn commit-version && git push && ctype apply",
     "deploy:patch": "yarn version --patch && yarn deploy",
     "deploy:minor": "yarn version --minor && yarn deploy",
