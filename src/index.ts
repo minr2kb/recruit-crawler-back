@@ -62,9 +62,7 @@ app.use(async (ctx: Context, next) => {
   const { method, url, status } = ctx;
   const logLevel = status >= 500 ? 'error' : status >= 400 ? 'warn' : 'info';
 
-  const logger = console;
-
-  logger[logLevel](`\n${new Date(start).toTimeString()} ${'\x1b[32m'}[${method}] ${url} ${status}${'\x1b[0m'} - ${ms}ms - ${ctx.get('user-agent')}`);
+  console[logLevel](`\n${new Date(start).toTimeString()} ${'\x1b[32m'}[${method}] ${url} ${status}${'\x1b[0m'} - ${ms}ms - ${ctx.get('user-agent')}`);
   
 })
 
