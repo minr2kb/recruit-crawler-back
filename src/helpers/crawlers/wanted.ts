@@ -15,7 +15,7 @@ const getDetailUrl = (id: number) => `https://www.wanted.co.kr/api/v4/jobs/${id}
 const WANTED_BASE_URL = 'https://www.wanted.co.kr/wd/';
 
 export const getPostsFromWantedByPage = (controller: AbortController) => async (position: string, cateKey: string, page: number) => {
-  console.log(`Wanted - ${position} - page - ${page}`);
+  // console.log(`Wanted - ${position} - page - ${page}`);
   const response = await axios.get(getUrl(cateKey, page), {
     signal: controller.signal,
   });
@@ -64,10 +64,6 @@ export const getPostsFromWanted = (controller: AbortController) => async (positi
 
     hasMorePages = pageResult.next;
     page += 1;
-    if(!hasMorePages){
-       console.log(`Wanted - ${position} - DONE✅`);
-       break
-    }
   }
 
   return result.sort(

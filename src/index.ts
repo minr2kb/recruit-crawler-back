@@ -53,6 +53,21 @@ app.on('error', (err, ctx) => {
   console.error('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
 });
 
+// middleware for logging
+app.use(async (ctx: Context, next) => {
+  const start = Date.now();
+  await next();
+  const ms = Date.now() - start;
+
+  const { method, url, status } = ctx;
+  const logLevel = status >= 500 ? 'error' : status >= 400 ? 'warn' : 'info';
+
+  const logger = console;
+
+  logger[logLevel](`\n${new Date(start).toTimeString()} ${'\x1b[32m'}[${method}] ${url} ${status}${'\x1b[0m'} - ${ms}ms - ${ctx.get('user-agent')}`);
+  
+})
+
 app.use(routes()).use(router.routes());
 
 const server = app.listen(port, () => {

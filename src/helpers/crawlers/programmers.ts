@@ -16,7 +16,7 @@ export const getPostsFromProgrammersByPage = (controller: AbortController) => as
   page: number,
   month?: number,
 ) => {
-  console.log(`Programmers - ${position} - page - ${page}`);
+  // console.log(`Programmers - ${position} - page - ${page}`);
   const response = await axios.get(getUrl(cateKey, page), {
     signal: controller.signal,
   });

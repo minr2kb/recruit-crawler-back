@@ -25,7 +25,7 @@ export const getPostsFromRememberByPage = (controller: AbortController) => async
   page: number,
   month?: number,
 ) => {
-  console.log(`Remember - ${position} - page - ${page}`);
+  // console.log(`Remember - ${position} - page - ${page}`);
   const response = await axios.post(getUrl(), getPostBody(cateKey, subCateKey, page), {
     signal: controller.signal,
   });

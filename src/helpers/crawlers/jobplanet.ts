@@ -21,7 +21,7 @@ const getPostsFromJobplanet = (controller: AbortController) => async (position: 
   let page = 1;
 
   while (posts.length === COUNT_PER_PAGE && !controller.signal.aborted) {
-    console.log(`Jobplanet - ${position} - page - ${page}`);
+    // console.log(`Jobplanet - ${position} - page - ${page}`);
     const response = await axios.get(getUrl(cateKey, page),
       {
         headers: { 

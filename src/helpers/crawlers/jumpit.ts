@@ -15,7 +15,7 @@ const JUMPIT_BASE_URL = 'https://www.jumpit.co.kr/position/';
 const COUNT_PER_PAGE = 16;
 
 export const getPostsFromJumpitByPage = (controller: AbortController) => async (position: string, cateKey: string, page: number, month?: number) => {
-  console.log(`Jumpit - ${position} - page - ${page}`);
+  // console.log(`Jumpit - ${position} - page - ${page}`);
   const response = await axios.get(getUrl(cateKey, page), {
     signal: controller.signal,
   });
