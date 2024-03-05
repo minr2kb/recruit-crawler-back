@@ -23,6 +23,7 @@ const getUrl = (cateKey, page) => `https://m.jobkorea.co.kr/recruit/joblist/_Lis
 const getDetailUrl = (id) => `https://m.jobkorea.co.kr/Recruit/GI_Read/${id}`;
 const JOBKOREA_BASE_URL = 'https://www.jobkorea.co.kr/Recruit/GI_Read/';
 const getPostsFromJobKoreaByPage = (controller) => (position, cateKey, page, month) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log(`Job Korea - ${position} - page - ${page}`);
     const response = yield axios_1.default.get(getUrl(cateKey, page), {
         signal: controller.signal,
     });
@@ -31,7 +32,7 @@ const getPostsFromJobKoreaByPage = (controller) => (position, cateKey, page, mon
     const posts = root.querySelectorAll('li.devAgiWrap');
     let next = posts.length === COUNT_PER_PAGE;
     const promises = posts.map((el) => __awaiter(void 0, void 0, void 0, function* () {
-        var _a, _b, _c;
+        var _a, _b, _c, _d, _e, _f;
         const id = el.getAttribute("data-gno");
         let updatedDate = "";
         try {
@@ -48,14 +49,15 @@ const getPostsFromJobKoreaByPage = (controller) => (position, cateKey, page, mon
         if (updatedDate && month && !(0, validation_1.isInMonths)(updatedDate, month)) {
             return null;
         }
+        const companyLocation = (_e = (_d = (_c = (_b = (_a = el.querySelector(".item")) === null || _a === void 0 ? void 0 : _a.innerText) === null || _b === void 0 ? void 0 : _b.split("\r\n")[4]) === null || _c === void 0 ? void 0 : _c.replace("&gt;", "")) === null || _d === void 0 ? void 0 : _d.trim()) !== null && _e !== void 0 ? _e : '';
         return {
             platform: '잡코리아',
             companyName: el.querySelector(".company").innerText,
             position,
-            title: (_a = el.querySelector(".title").innerText) !== null && _a !== void 0 ? _a : '',
+            title: (_f = el.querySelector(".title").innerText) !== null && _f !== void 0 ? _f : '',
             updatedDate: updatedDate ? (0, format_1.toStringByFormatting)(new Date(updatedDate)) : "",
             recruitUrl: JOBKOREA_BASE_URL + id,
-            companyLocation: (_c = (_b = el.querySelector(".item").innerText) === null || _b === void 0 ? void 0 : _b.split("\r\n")[4].replace("&gt;", "").trim()) !== null && _c !== void 0 ? _c : '',
+            companyLocation,
         };
     }));
     const result = (yield Promise.all(promises)).filter(data => !!data);

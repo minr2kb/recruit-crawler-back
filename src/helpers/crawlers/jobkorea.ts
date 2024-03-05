@@ -15,7 +15,7 @@ const getDetailUrl = (id: number) => `https://m.jobkorea.co.kr/Recruit/GI_Read/$
 const JOBKOREA_BASE_URL = 'https://www.jobkorea.co.kr/Recruit/GI_Read/';
 
 export const getPostsFromJobKoreaByPage = (controller: AbortController) => async (position: string, cateKey: string, page: number, month?: number) => {
-
+console.log(`Job Korea - ${position} - page - ${page}`);
   const response = await axios.get(getUrl(cateKey, page), {
     signal: controller.signal,
   });
@@ -46,6 +46,8 @@ export const getPostsFromJobKoreaByPage = (controller: AbortController) => async
       return null
     }
 
+    const companyLocation = el.querySelector(".item")?.innerText?.split("\r\n")[4]?.replace("&gt;","")?.trim() ?? ''
+
     return {
       platform: '잡코리아',
       companyName: el.querySelector(".company").innerText,
@@ -53,7 +55,7 @@ export const getPostsFromJobKoreaByPage = (controller: AbortController) => async
       title: el.querySelector(".title").innerText ?? '',
       updatedDate: updatedDate ? toStringByFormatting(new Date(updatedDate)) : "",
       recruitUrl: JOBKOREA_BASE_URL + id,
-      companyLocation: el.querySelector(".item").innerText?.split("\r\n")[4].replace("&gt;","").trim() ?? '',
+      companyLocation,
     };
   });
 
