@@ -2,7 +2,7 @@
 import { HttpStatusCode } from 'axios';
 import { type Context } from 'koa';
 import { DIVIDER_SIGN } from '../../helpers/consts';
-import { getPostsFromJobKoreaByPage } from '../../helpers/crawlers/jobkorea';
+import { getPostsFromJobKorea, getPostsFromJobKoreaByPage } from '../../helpers/crawlers/jobkorea';
 import getPostsFromJobplanet from '../../helpers/crawlers/jobplanet';
 import { getPostsFromJumpit, getPostsFromJumpitByPage } from '../../helpers/crawlers/jumpit';
 import { getPostsFromProgrammers, getPostsFromProgrammersByPage } from '../../helpers/crawlers/programmers';
@@ -159,8 +159,7 @@ export default {
     }
   },
   jobkorea: async (ctx: Context) => {
-    // const { position, cateKey, page } = ctx.query;
-
+    const { position, cateKey, page, month } = ctx.query;
     const controller = new AbortController();
 
     const onClose = () => {
@@ -170,13 +169,17 @@ export default {
     ctx.res.on('close', onClose);
 
     try {
-      // const res = page ? 
-      // await getPostsFromWantedByPage(controller)(
-      //   position as string,
-      //   cateKey as string,
-      //   page ? Number(page) : undefined,
-      // ) : await getPostsFromWanted(controller)(position as string, cateKey as string);
-      const res = await getPostsFromJobKoreaByPage(controller)('백엔드', '1000229', 1);
+      const res = page ? 
+      await getPostsFromJobKoreaByPage(controller)(
+        position as string,
+        cateKey as string,
+        page ? Number(page) : undefined,
+        month ? Number(month) : undefined,
+      ) : await getPostsFromJobKorea(controller)(
+        position as string,
+        cateKey as string,
+        month ? Number(month) : undefined,
+      );
       sendResponse(ctx, HttpStatusCode.Ok, '', res);
     } catch (error) {
       sendError(ctx, error);

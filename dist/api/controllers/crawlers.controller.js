@@ -128,7 +128,7 @@ exports.default = {
         }
     }),
     jobkorea: (ctx) => __awaiter(void 0, void 0, void 0, function* () {
-        // const { position, cateKey, page } = ctx.query;
+        const { position, cateKey, page, month } = ctx.query;
         const controller = new AbortController();
         const onClose = () => {
             console.log('Client connection closed');
@@ -136,13 +136,8 @@ exports.default = {
         };
         ctx.res.on('close', onClose);
         try {
-            // const res = page ? 
-            // await getPostsFromWantedByPage(controller)(
-            //   position as string,
-            //   cateKey as string,
-            //   page ? Number(page) : undefined,
-            // ) : await getPostsFromWanted(controller)(position as string, cateKey as string);
-            const res = yield (0, jobkorea_1.getPostsFromJobKoreaByPage)(controller)('백엔드', '1000229', 1);
+            const res = page ?
+                yield (0, jobkorea_1.getPostsFromJobKoreaByPage)(controller)(position, cateKey, page ? Number(page) : undefined, month ? Number(month) : undefined) : yield (0, jobkorea_1.getPostsFromJobKorea)(controller)(position, cateKey, month ? Number(month) : undefined);
             (0, response_1.sendResponse)(ctx, axios_1.HttpStatusCode.Ok, '', res);
         }
         catch (error) {
