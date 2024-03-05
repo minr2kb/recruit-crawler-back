@@ -32,6 +32,9 @@ const router = new koa_router_1.default({ prefix: '/crawlers' })
 }))
     .get('/wanted', (ctx) => __awaiter(void 0, void 0, void 0, function* () {
     yield controllers_1.CrawlerCtrl.wanted(ctx);
+}))
+    .get('/jobkorea', (ctx) => __awaiter(void 0, void 0, void 0, function* () {
+    yield controllers_1.CrawlerCtrl.jobkorea(ctx);
 }));
 exports.default = () => router.routes();
 //# sourceMappingURL=crawlers.routes.js.map

@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 /* eslint-disable no-unused-vars */
 const axios_1 = require("axios");
 const consts_1 = require("../../helpers/consts");
+const jobkorea_1 = require("../../helpers/crawlers/jobkorea");
 const jobplanet_1 = __importDefault(require("../../helpers/crawlers/jobplanet"));
 const jumpit_1 = require("../../helpers/crawlers/jumpit");
 const programmers_1 = require("../../helpers/crawlers/programmers");
@@ -117,6 +118,31 @@ exports.default = {
         try {
             const res = page ?
                 yield (0, wanted_1.getPostsFromWantedByPage)(controller)(position, cateKey, page ? Number(page) : undefined) : yield (0, wanted_1.getPostsFromWanted)(controller)(position, cateKey);
+            (0, response_1.sendResponse)(ctx, axios_1.HttpStatusCode.Ok, '', res);
+        }
+        catch (error) {
+            (0, response_1.sendError)(ctx, error);
+        }
+        finally {
+            ctx.res.removeListener('close', onClose);
+        }
+    }),
+    jobkorea: (ctx) => __awaiter(void 0, void 0, void 0, function* () {
+        // const { position, cateKey, page } = ctx.query;
+        const controller = new AbortController();
+        const onClose = () => {
+            console.log('Client connection closed');
+            controller.abort();
+        };
+        ctx.res.on('close', onClose);
+        try {
+            // const res = page ? 
+            // await getPostsFromWantedByPage(controller)(
+            //   position as string,
+            //   cateKey as string,
+            //   page ? Number(page) : undefined,
+            // ) : await getPostsFromWanted(controller)(position as string, cateKey as string);
+            const res = yield (0, jobkorea_1.getPostsFromJobKoreaByPage)(controller)('백엔드', '1000229', 1);
             (0, response_1.sendResponse)(ctx, axios_1.HttpStatusCode.Ok, '', res);
         }
         catch (error) {

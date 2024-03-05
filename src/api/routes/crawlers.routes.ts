@@ -20,5 +20,8 @@ const router = new Router({ prefix: '/crawlers' })
   .get('/wanted', async ctx => {
     await CrawlerCtrl.wanted(ctx);
   })
+  .get('/jobkorea', async ctx => {
+    await CrawlerCtrl.jobkorea(ctx);
+  })
 
 export default () => router.routes();
