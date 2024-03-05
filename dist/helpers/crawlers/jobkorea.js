@@ -17,7 +17,6 @@ exports.getPostsFromJobKorea = exports.getPostsFromJobKoreaByPage = void 0;
 const axios_1 = __importDefault(require("axios"));
 const node_html_parser_1 = __importDefault(require("node-html-parser"));
 const format_1 = require("../format");
-const validation_1 = require("../validation");
 const COUNT_PER_PAGE = 40;
 const getUrl = (cateKey, page) => `https://m.jobkorea.co.kr/recruit/joblist/_ListNormal?duty=${cateKey}&dkwrd=100023047566252&searchType=2&sort=8&page=${page}`;
 const getDetailUrl = (id) => `https://m.jobkorea.co.kr/Recruit/GI_Read/${id}`;
@@ -35,20 +34,20 @@ const getPostsFromJobKoreaByPage = (controller) => (position, cateKey, page, mon
         var _a, _b, _c, _d, _e, _f;
         const id = el.getAttribute("data-gno");
         let updatedDate = "";
-        try {
-            const response = yield axios_1.default.get(getDetailUrl(Number(id)), {
-                signal: controller.signal,
-            });
-            const pageRoot = (0, node_html_parser_1.default)(response.data);
-            const companyInfo = pageRoot.querySelector(`.company-name`);
-            updatedDate = companyInfo === null || companyInfo === void 0 ? void 0 : companyInfo.getAttribute("data-applystartdt");
-        }
-        catch (e) {
-            console.error(e);
-        }
-        if (updatedDate && month && !(0, validation_1.isInMonths)(updatedDate, month)) {
-            return null;
-        }
+        // try {
+        //   const response = await axios.get(getDetailUrl(Number(id)), {
+        //     signal: controller.signal,
+        //   });
+        //   const pageRoot = parse(response.data);
+        //   const companyInfo = pageRoot.querySelector(`.company-name`)
+        //   updatedDate = companyInfo?.getAttribute("data-applystartdt") 
+        // }
+        // catch (e) {
+        //   console.error(e);
+        // }
+        // if (updatedDate && month && !isInMonths(updatedDate, month)){ 
+        //   return null
+        // }
         const companyLocation = (_e = (_d = (_c = (_b = (_a = el.querySelector(".item")) === null || _a === void 0 ? void 0 : _a.innerText) === null || _b === void 0 ? void 0 : _b.split("\r\n")[4]) === null || _c === void 0 ? void 0 : _c.replace("&gt;", "")) === null || _d === void 0 ? void 0 : _d.trim()) !== null && _e !== void 0 ? _e : '';
         return {
             platform: '잡코리아',

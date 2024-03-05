@@ -4,7 +4,6 @@ import axios from 'axios';
 import parse from 'node-html-parser';
 import { ResultType } from '../../types/commonTypes';
 import { toStringByFormatting } from '../format';
-import { isInMonths } from '../validation';
 
 const COUNT_PER_PAGE = 40;
 
@@ -29,22 +28,22 @@ console.log(`Job Korea - ${position} - page - ${page}`);
   const promises = posts.map(async el => {
     const id = el.getAttribute("data-gno");
     let updatedDate: string = "";
-    try {
-      const response = await axios.get(getDetailUrl(Number(id)), {
-        signal: controller.signal,
-      });
+    // try {
+    //   const response = await axios.get(getDetailUrl(Number(id)), {
+    //     signal: controller.signal,
+    //   });
 
-      const pageRoot = parse(response.data);
-      const companyInfo = pageRoot.querySelector(`.company-name`)
-      updatedDate = companyInfo?.getAttribute("data-applystartdt") 
-    }
-    catch (e) {
-      console.error(e);
-    }
+    //   const pageRoot = parse(response.data);
+    //   const companyInfo = pageRoot.querySelector(`.company-name`)
+    //   updatedDate = companyInfo?.getAttribute("data-applystartdt") 
+    // }
+    // catch (e) {
+    //   console.error(e);
+    // }
 
-    if (updatedDate && month && !isInMonths(updatedDate, month)){ 
-      return null
-    }
+    // if (updatedDate && month && !isInMonths(updatedDate, month)){ 
+    //   return null
+    // }
 
     const companyLocation = el.querySelector(".item")?.innerText?.split("\r\n")[4]?.replace("&gt;","")?.trim() ?? ''
 
