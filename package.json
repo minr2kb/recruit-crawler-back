@@ -11,7 +11,7 @@
     "build": "tsc",
     "dev": "nodemon --watch src/ src/index.ts",
     "start": "node ./dist/index.js",
-    "commit-version": "git commit -am \"UPDATE v$(node -p \"require('./package.json').version\")\" --allow-empty",
+    "commit-version": " git add . && git commit -am \"UPDATE v$(node -p \"require('./package.json').version\")\" --allow-empty",
     "deploy": "npm run build && yarn commit-version && git push && ctype apply",
     "deploy:patch": "yarn version --patch && yarn deploy",
     "deploy:minor": "yarn version --minor && yarn deploy",
