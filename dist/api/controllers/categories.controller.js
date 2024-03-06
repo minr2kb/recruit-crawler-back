@@ -126,7 +126,7 @@ exports.default = {
                 return null;
             return {
                 label: (_d = (_c = doc.nextElementSibling) === null || _c === void 0 ? void 0 : _c.innerText) === null || _d === void 0 ? void 0 : _d.replaceAll('&#183;', '·'),
-                children: (_e = cateDoc.querySelectorAll(`input[data-dutyctgrcode='${doc.getAttribute('value')}']`)) === null || _e === void 0 ? void 0 : _e.map((childDoc) => {
+                children: (_e = cateDoc.querySelectorAll(`input[data-dutyctgrcode='${doc.getAttribute('value')}'][name='depth1-duty']`)) === null || _e === void 0 ? void 0 : _e.map((childDoc) => {
                     var _a, _b, _c, _d;
                     return ({
                         label: (_c = (_b = (_a = childDoc === null || childDoc === void 0 ? void 0 : childDoc.nextElementSibling) === null || _a === void 0 ? void 0 : _a.innerText) === null || _b === void 0 ? void 0 : _b.replaceAll('&#183;', '·')) !== null && _c !== void 0 ? _c : "",

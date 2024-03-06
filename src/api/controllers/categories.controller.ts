@@ -106,7 +106,7 @@ export default {
       if (!label) return null;
       return {
         label: doc.nextElementSibling?.innerText?.replaceAll('&#183;', '·'),
-        children: cateDoc.querySelectorAll(`input[data-dutyctgrcode='${doc.getAttribute('value')}']`)?.map((childDoc) => ({
+        children: cateDoc.querySelectorAll(`input[data-dutyctgrcode='${doc.getAttribute('value')}'][name='depth1-duty']`)?.map((childDoc) => ({
           label: childDoc?.nextElementSibling?.innerText?.replaceAll('&#183;', '·') ?? "",
           value: childDoc?.getAttribute('value') ?? "",
         })),
