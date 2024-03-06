@@ -7,15 +7,16 @@ import {
   DIVIDER_SIGN,
   JOBKOREA_CATE_URL,
   JOBPLANET_CATE_URL,
+  JUMPIT_CATE_URL,
   PROGRAMMERS_CATE_URL,
   REMEMBER_CATE_URL,
-  jumpitCategories,
-  wantedCategories,
+  WANTED_CATE_URL
 } from '../../helpers/consts';
 import { sendError, sendResponse } from '../../helpers/response';
 import {
   type JobplanetCateResponseType,
-  type ProgrammersResponseType,
+  type JumpitCateResponseType,
+  type ProgrammersCateResponseType,
   type RememberCateResponseType,
 } from '../../types/categoryResponseTypes';
 import { type CategoryFilterType } from '../../types/commonTypes';
@@ -52,12 +53,20 @@ export default {
     }
   },
   jumpit: async (ctx: Context) => {
-    const res = jumpitCategories;
+    const response = await axios.get<JumpitCateResponseType>(JUMPIT_CATE_URL)
+    const jobCategory = response.data.result.jobCategory;
+    const res: CategoryFilterType[] = [{
+      label: "전체",
+      children: jobCategory.map(cate => ({
+        label: cate.name,
+        value: cate.id,
+      })),
+    }];
     sendResponse(ctx, HttpStatusCode.Ok, '', res);
   },
   programmers: async (ctx: Context) => {
     try {
-      const response = await axios.get<ProgrammersResponseType>(PROGRAMMERS_CATE_URL);
+      const response = await axios.get<ProgrammersCateResponseType>(PROGRAMMERS_CATE_URL);
       const res: CategoryFilterType[] = response.data.map(cate => ({
         label: cate.name,
         value: cate.id,
@@ -89,15 +98,24 @@ export default {
     }
   },
   wanted: async (ctx: Context) => {
-    const res: CategoryFilterType[] = wantedCategories.map(cate => ({
-      label: cate.title,
-      children: cate.tags.map(tag => ({ label: tag.title, value: tag.id })),
-    }));
+    const response = await axios.get(WANTED_CATE_URL);
+    const cateDoc = parse(response.data);
+    const doc = cateDoc.querySelector('script#__NEXT_DATA__').innerText;
+    const parsedProps = JSON.parse(doc)
+
+    const res: CategoryFilterType[] = parsedProps.props.pageProps.tags.category.map((cate) => {
+      return {
+        label: cate.title,
+        children: cate.tags.map((tag) => ({
+          label: tag.title,
+          value: tag.id,
+        }))
+      }
+    })
     sendResponse(ctx, HttpStatusCode.Ok, '', res);
   },
   jobkorea: async (ctx: Context) => {
-    const jkCateDocUrl = JOBKOREA_CATE_URL;
-    const response = await axios.get(jkCateDocUrl);
+    const response = await axios.get(JOBKOREA_CATE_URL);
     const cateDoc = parse(response.data);
     const root = cateDoc.querySelectorAll('#depth1-dutyctgr > li > input');
 
@@ -110,7 +128,7 @@ export default {
           label: childDoc?.nextElementSibling?.innerText?.replaceAll('&#183;', '·') ?? "",
           value: childDoc?.getAttribute('value') ?? "",
         })),
-    }}
+      }}
     )
     sendResponse(ctx, HttpStatusCode.Ok, '', res);
   },

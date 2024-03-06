@@ -71,7 +71,15 @@ exports.default = {
         }
     }),
     jumpit: (ctx) => __awaiter(void 0, void 0, void 0, function* () {
-        const res = consts_1.jumpitCategories;
+        const response = yield axios_1.default.get(consts_1.JUMPIT_CATE_URL);
+        const jobCategory = response.data.result.jobCategory;
+        const res = [{
+                label: "전체",
+                children: jobCategory.map(cate => ({
+                    label: cate.name,
+                    value: cate.id,
+                })),
+            }];
         (0, response_1.sendResponse)(ctx, axios_1.HttpStatusCode.Ok, '', res);
     }),
     programmers: (ctx) => __awaiter(void 0, void 0, void 0, function* () {
@@ -108,15 +116,23 @@ exports.default = {
         }
     }),
     wanted: (ctx) => __awaiter(void 0, void 0, void 0, function* () {
-        const res = consts_1.wantedCategories.map(cate => ({
-            label: cate.title,
-            children: cate.tags.map(tag => ({ label: tag.title, value: tag.id })),
-        }));
+        const response = yield axios_1.default.get(consts_1.WANTED_CATE_URL);
+        const cateDoc = (0, node_html_parser_1.default)(response.data);
+        const doc = cateDoc.querySelector('script#__NEXT_DATA__').innerText;
+        const parsedProps = JSON.parse(doc);
+        const res = parsedProps.props.pageProps.tags.category.map((cate) => {
+            return {
+                label: cate.title,
+                children: cate.tags.map((tag) => ({
+                    label: tag.title,
+                    value: tag.id,
+                }))
+            };
+        });
         (0, response_1.sendResponse)(ctx, axios_1.HttpStatusCode.Ok, '', res);
     }),
     jobkorea: (ctx) => __awaiter(void 0, void 0, void 0, function* () {
-        const jkCateDocUrl = consts_1.JOBKOREA_CATE_URL;
-        const response = yield axios_1.default.get(jkCateDocUrl);
+        const response = yield axios_1.default.get(consts_1.JOBKOREA_CATE_URL);
         const cateDoc = (0, node_html_parser_1.default)(response.data);
         const root = cateDoc.querySelectorAll('#depth1-dutyctgr > li > input');
         const res = root.map((doc) => {

@@ -12,7 +12,7 @@ export interface JobplanetCateResponseType {
   data: Record<string, JobplanetCateDataType[]>;
 }
 
-export type ProgrammersResponseType = Array<{ id: number; name: string }>;
+export type ProgrammersCateResponseType = Array<{ id: number; name: string }>;
 
 export interface RememberCateDataType {
   name: string;
@@ -22,6 +22,20 @@ export interface RememberCateDataType {
 export interface RememberCateResponseType {
   code: string;
   data: Record<string, RememberCateDataType[]>;
+  errors?: any;
+  messeage?: string | null;
+}
+
+export interface JumpitCateResponseType {
+  code: string;
+  result: {
+    jobCategory: Array<{
+      id: number;
+      name: string;
+      recommendTechStacks: Array<{ name: string; imagePath: string}>
+    }>,
+    [key: string]: any[]
+  };
   errors?: any;
   messeage?: string | null;
 }
