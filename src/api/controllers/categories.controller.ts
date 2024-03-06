@@ -2,8 +2,10 @@
 
 import axios, { HttpStatusCode } from 'axios';
 import { type Context } from 'koa';
+import parse from 'node-html-parser';
 import {
   DIVIDER_SIGN,
+  JOBKOREA_CATE_URL,
   JOBPLANET_CATE_URL,
   PROGRAMMERS_CATE_URL,
   REMEMBER_CATE_URL,
@@ -91,6 +93,25 @@ export default {
       label: cate.title,
       children: cate.tags.map(tag => ({ label: tag.title, value: tag.id })),
     }));
+    sendResponse(ctx, HttpStatusCode.Ok, '', res);
+  },
+  jobkorea: async (ctx: Context) => {
+    const jkCateDocUrl = JOBKOREA_CATE_URL;
+    const response = await axios.get(jkCateDocUrl);
+    const cateDoc = parse(response.data);
+    const root = cateDoc.querySelectorAll('#depth1-dutyctgr > li > input');
+
+    const res: CategoryFilterType[] = root.map((doc) => {
+      const label = doc.nextElementSibling?.innerText?.replaceAll('&#183;', '·');
+      if (!label) return null;
+      return {
+        label: doc.nextElementSibling?.innerText?.replaceAll('&#183;', '·'),
+        children: cateDoc.querySelectorAll(`input[data-dutyctgrcode='${doc.getAttribute('value')}']`)?.map((childDoc) => ({
+          label: childDoc?.nextElementSibling?.innerText?.replaceAll('&#183;', '·') ?? "",
+          value: childDoc?.getAttribute('value') ?? "",
+        })),
+    }}
+    )
     sendResponse(ctx, HttpStatusCode.Ok, '', res);
   },
 };

@@ -1,10 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.wantedCategories = exports.jumpitCategories = exports.REMEMBER_CATE_URL = exports.PROGRAMMERS_CATE_URL = exports.JOBPLANET_CATE_URL = exports.DIVIDER_SIGN = void 0;
+exports.wantedCategories = exports.jumpitCategories = exports.JOBKOREA_CATE_URL = exports.REMEMBER_CATE_URL = exports.PROGRAMMERS_CATE_URL = exports.JOBPLANET_CATE_URL = exports.DIVIDER_SIGN = void 0;
 exports.DIVIDER_SIGN = '$$==$$';
 exports.JOBPLANET_CATE_URL = 'https://www.jobplanet.co.kr/api/v1/common/wizard/meta_info?fields=display_filters';
 exports.PROGRAMMERS_CATE_URL = 'https://career.programmers.co.kr/api/job_positions/job_categories';
 exports.REMEMBER_CATE_URL = 'https://api.rememberapp.co.kr/v2/open_profiles/options';
+exports.JOBKOREA_CATE_URL = 'https://m.jobkorea.co.kr/Public/API/CommonUI/SearchFilter/JobList';
 exports.jumpitCategories = [
     {
         label: '전체',

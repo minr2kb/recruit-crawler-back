@@ -14,7 +14,7 @@ const getDetailUrl = (id: number) => `https://m.jobkorea.co.kr/Recruit/GI_Read/$
 const JOBKOREA_BASE_URL = 'https://www.jobkorea.co.kr/Recruit/GI_Read/';
 
 export const getPostsFromJobKoreaByPage = (controller: AbortController) => async (position: string, cateKey: string, page: number, month?: number) => {
-console.log(`Job Korea - ${position} - page - ${page}`);
+// console.log(`Job Korea - ${position} - page - ${page}`);
   const response = await axios.get(getUrl(cateKey, page), {
     signal: controller.signal,
   });

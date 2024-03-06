@@ -32,6 +32,9 @@ const router = new koa_router_1.default({ prefix: '/categories' })
 }))
     .get('/wanted', (ctx) => __awaiter(void 0, void 0, void 0, function* () {
     yield controllers_1.CategoryCtrl.wanted(ctx);
+}))
+    .get('/jobkorea', (ctx) => __awaiter(void 0, void 0, void 0, function* () {
+    yield controllers_1.CategoryCtrl.jobkorea(ctx);
 }));
 exports.default = () => router.routes();
 //# sourceMappingURL=categories.routes.js.map

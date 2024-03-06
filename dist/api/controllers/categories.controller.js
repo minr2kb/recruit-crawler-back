@@ -32,8 +32,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const axios_1 = __importStar(require("axios"));
+const node_html_parser_1 = __importDefault(require("node-html-parser"));
 const consts_1 = require("../../helpers/consts");
 const response_1 = require("../../helpers/response");
 exports.default = {
@@ -108,6 +112,29 @@ exports.default = {
             label: cate.title,
             children: cate.tags.map(tag => ({ label: tag.title, value: tag.id })),
         }));
+        (0, response_1.sendResponse)(ctx, axios_1.HttpStatusCode.Ok, '', res);
+    }),
+    jobkorea: (ctx) => __awaiter(void 0, void 0, void 0, function* () {
+        const jkCateDocUrl = consts_1.JOBKOREA_CATE_URL;
+        const response = yield axios_1.default.get(jkCateDocUrl);
+        const cateDoc = (0, node_html_parser_1.default)(response.data);
+        const root = cateDoc.querySelectorAll('#depth1-dutyctgr > li > input');
+        const res = root.map((doc) => {
+            var _a, _b, _c, _d, _e;
+            const label = (_b = (_a = doc.nextElementSibling) === null || _a === void 0 ? void 0 : _a.innerText) === null || _b === void 0 ? void 0 : _b.replaceAll('&#183;', '·');
+            if (!label)
+                return null;
+            return {
+                label: (_d = (_c = doc.nextElementSibling) === null || _c === void 0 ? void 0 : _c.innerText) === null || _d === void 0 ? void 0 : _d.replaceAll('&#183;', '·'),
+                children: (_e = cateDoc.querySelectorAll(`input[data-dutyctgrcode='${doc.getAttribute('value')}']`)) === null || _e === void 0 ? void 0 : _e.map((childDoc) => {
+                    var _a, _b, _c, _d;
+                    return ({
+                        label: (_c = (_b = (_a = childDoc === null || childDoc === void 0 ? void 0 : childDoc.nextElementSibling) === null || _a === void 0 ? void 0 : _a.innerText) === null || _b === void 0 ? void 0 : _b.replaceAll('&#183;', '·')) !== null && _c !== void 0 ? _c : "",
+                        value: (_d = childDoc === null || childDoc === void 0 ? void 0 : childDoc.getAttribute('value')) !== null && _d !== void 0 ? _d : "",
+                    });
+                }),
+            };
+        });
         (0, response_1.sendResponse)(ctx, axios_1.HttpStatusCode.Ok, '', res);
     }),
 };

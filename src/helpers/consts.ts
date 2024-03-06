@@ -10,6 +10,8 @@ export const PROGRAMMERS_CATE_URL =
 
 export const REMEMBER_CATE_URL = 'https://api.rememberapp.co.kr/v2/open_profiles/options';
 
+export const JOBKOREA_CATE_URL = 'https://m.jobkorea.co.kr/Public/API/CommonUI/SearchFilter/JobList';
+
 export const jumpitCategories: CategoryFilterType[] = [
   {
     label: '전체',

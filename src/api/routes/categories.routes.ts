@@ -19,6 +19,9 @@ const router = new Router({ prefix: '/categories' })
   })
   .get('/wanted', async ctx => {
     await CategoryCtrl.wanted(ctx);
+  })
+  .get('/jobkorea', async ctx => {
+    await CategoryCtrl.jobkorea(ctx);
   });
 
 export default () => router.routes();

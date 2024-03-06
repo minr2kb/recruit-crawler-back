@@ -22,7 +22,7 @@ const getUrl = (cateKey, page) => `https://m.jobkorea.co.kr/recruit/joblist/_Lis
 const getDetailUrl = (id) => `https://m.jobkorea.co.kr/Recruit/GI_Read/${id}`;
 const JOBKOREA_BASE_URL = 'https://www.jobkorea.co.kr/Recruit/GI_Read/';
 const getPostsFromJobKoreaByPage = (controller) => (position, cateKey, page, month) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log(`Job Korea - ${position} - page - ${page}`);
+    // console.log(`Job Korea - ${position} - page - ${page}`);
     const response = yield axios_1.default.get(getUrl(cateKey, page), {
         signal: controller.signal,
     });
